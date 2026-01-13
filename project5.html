@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virat Kohli Legend Carousel</title>
+    <style>
+        /* --- CSS STYLING --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .slider-wrapper {
+            position: relative;
+            width: 90%;
+            max-width: 1000px;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 2px solid #333;
+        }
+
+        .slider-track {
+            display: flex;
+            width: 300%;
+            height: 100%;
+            transition: transform 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+        }
+
+        .slide {
+            width: 100.33%; /* Fix for sub-pixel gaps */
+            height: 100%;
+            position: relative;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.7); /* Makes text pop */
+        }
+
+        /* Caption Styling */
+        .caption {
+            position: absolute;
+            bottom: 10%;
+            left: 5%;
+            color: white;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease 0.4s;
+        }
+
+        .active-caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .caption h2 {
+            font-size: 3rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ffb400; /* Signature Gold */
+        }
+
+        /* Buttons */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            font-size: 24px;
+            border-radius: 50%;
+            transition: 0.3s;
+            z-index: 100;
+        }
+
+        .nav-btn:hover {
+            background: #ffb400;
+            color: black;
+        }
+
+        .prev { left: 20px; }
+        .next { right: 20px; }
+
+        /* Progress Bar */
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #ffb400;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-wrapper">
+        <div class="slider-track" id="track">
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=80&w=1000" alt="Kohli 1">
+                <div class="caption active-caption">
+                    <h2>The Run Machine</h2>
+                    <p>Dominating the game across all formats.</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?auto=format&fit=crop&q=80&w=1000" alt="Kohli 2">
+                <div class="caption">
+                    <h2>Unmatched Passion</h2>
+                    <p>Chasing excellence with every strike.</p>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcOl5ePqpYbeKAn-wuMR4Aj9vi307wutTnwHSHad_hxyXovnbHUGwjlkzv&s=10" alt="Kohli 3">
+                <div class="caption">
+                    <h2>The GOAT</h2>
+                    <p>A legacy built on hard work and grit.</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-btn prev" onclick="changeSlide(-1)">&#10094;</button>
+        <button class="nav-btn next" onclick="changeSlide(1)">&#10095;</button>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progress"></div>
+        </div>
+    </div>
+
+    <script>
+        let index = 0;
+        const track = document.getElementById('track');
+        const captions = document.querySelectorAll('.caption');
+        const progressBar = document.getElementById('progress');
+        const totalSlides = 3;
+        const intervalTime = 3000;
+        let slideInterval;
+
+        function updateSlider() {
+            // Move images
+            track.style.transform = `translateX(-${index * (100 / totalSlides)}%)`;
+            
+            // Toggle text animation
+            captions.forEach((cap, i) => {
+                cap.classList.toggle('active-caption', i === index);
+            });
+
+            // Reset Progress Bar
+            progressBar.style.transition = 'none';
+            progressBar.style.width = '0%';
+            setTimeout(() => {
+                progressBar.style.transition = `width ${intervalTime}ms linear`;
+                progressBar.style.width = '100%';
+            }, 50);
+        }
+
+        function changeSlide(direction) {
+            index += direction;
+            if (index >= totalSlides) index = 0;
+            if (index < 0) index = totalSlides - 1;
+            updateSlider();
+            startAutoPlay(); // Restart timer on click
+        }
+
+        function startAutoPlay() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                changeSlide(1);
+            }, intervalTime);
+        }
+
+        // Initialize
+        updateSlider();
+        startAutoPlay();
+    </script>
+</body>
+</html>
